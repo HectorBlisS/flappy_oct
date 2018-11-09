@@ -3,7 +3,7 @@ var canvas = document.getElementById('c')
 var ctx = canvas.getContext('2d')
 //variables
 var interval
-var frames
+var frames = 0
 var images = {
     bg: "https://github.com/ironhack-labs/lab-canvas-flappybirds/blob/master/starter_code/images/bg.png?raw=true",
     flappy: "https://github.com/ironhack-labs/lab-canvas-flappybirds/blob/master/starter_code/images/flappy.png?raw=true",
@@ -11,6 +11,7 @@ var images = {
     obstacle_bottom: "https://github.com/ironhack-labs/lab-canvas-flappybirds/blob/master/starter_code/images/obstacle_bottom.png?raw=true",
     obstacle_top: "https://github.com/ironhack-labs/lab-canvas-flappybirds/blob/master/starter_code/images/obstacle_top.png?raw=true"
 }
+var pipes = []
 //clases
 function Board(){
     this.x = 0
@@ -47,22 +48,39 @@ function Flappy(){
         else if(this.y < 10 ) {
             this.y = 10
         }
-        else this.y*=1.01
+        else this.y+=2.01
 
+    }
+} //flappy
+//pipe
+function Pipe(height){
+    this.x = canvas.width + 60
+    this.y = 0
+    this.width = 60
+    this.height = height
+    this.image = new Image()
+    this.image.src = images.obstacle_top
+    this.draw = function(){
+        this.x--
+        ctx.drawImage(this.image,this.x,this.y,this.width,this.height) 
     }
 }
 
 //instances
 var bg = new Board()
 var flappy = new Flappy()
+var pipe = new Pipe()
 //main functions
 function start(){
     if(!interval) interval = setInterval(update,1000/60)
 }
 function update(){
+    frames++
     ctx.clearRect(0,0,canvas.width, canvas.height)
     bg.draw()
     flappy.draw()
+    pipe.draw()
+    drawPipes()
 }
 function gameOver(){}
 
@@ -76,6 +94,21 @@ function drawCover(){
         ctx.font = "bold 24px Avenir"
         ctx.fillText("Presiona la tecla 'Return' para comenzar", 50,300)
     }
+}
+
+function generatePipes(){
+    if(frames%100===0) {
+        var height = Math.floor(Math.random()*300)
+        pipes.push(new Pipe(height))
+    }
+    
+}
+
+function drawPipes(){
+    generatePipes()
+    pipes.forEach(function(pipe){
+        pipe.draw()
+    })
 }
 
 //listeners
