@@ -27,6 +27,11 @@ function Board(){
         ctx.drawImage(this.image,this.x,this.y,this.width,this.height)
         ctx.drawImage(this.image,this.x + this.width,this.y,this.width,this.height)
     }
+
+    this.drawScore = function(){
+        ctx.font = "bold 24px Avenir"
+        ctx.fillText("Score: " + Math.floor(frames/60), 50,50)
+    }
 }
 
 function Flappy(){
@@ -53,15 +58,15 @@ function Flappy(){
     }
 } //flappy
 //pipe
-function Pipe(height){
+function Pipe(height,y, position){
     this.x = canvas.width + 60
-    this.y = 0
+    this.y = y || 0
     this.width = 60
     this.height = height
     this.image = new Image()
-    this.image.src = images.obstacle_top
+    this.image.src = position === "top" ? images.obstacle_top : images.obstacle_bottom
     this.draw = function(){
-        this.x--
+        this.x-=2
         ctx.drawImage(this.image,this.x,this.y,this.width,this.height) 
     }
 }
@@ -79,8 +84,8 @@ function update(){
     ctx.clearRect(0,0,canvas.width, canvas.height)
     bg.draw()
     flappy.draw()
-    pipe.draw()
     drawPipes()
+    bg.drawScore()
 }
 function gameOver(){}
 
@@ -97,9 +102,12 @@ function drawCover(){
 }
 
 function generatePipes(){
-    if(frames%100===0) {
-        var height = Math.floor(Math.random()*300)
-        pipes.push(new Pipe(height))
+    if(frames%150===0) {
+        var height = Math.floor(Math.random()*150)
+        pipes.push(new Pipe(height,0, "top"))
+        var h = canvas.height-height-100
+        var y = canvas.height - h
+        pipes.push(new Pipe(h,y))
     }
     
 }
