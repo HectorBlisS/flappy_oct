@@ -56,6 +56,14 @@ function Flappy(){
         else this.y+=2.01
 
     }
+
+    this.isTouching = function(item){
+        return (this.x < item.x + item.width) &&
+        (this.x + this.width > item.x) &&
+        (this.y < item.y + item.height) &&
+        (this.y + this.height > item.y);
+    }
+
 } //flappy
 //pipe
 function Pipe(height,y, position){
@@ -77,6 +85,9 @@ var flappy = new Flappy()
 var pipe = new Pipe()
 //main functions
 function start(){
+    pipes = []
+    frames = 0
+    flappy = new Flappy()
     if(!interval) interval = setInterval(update,1000/60)
 }
 function update(){
@@ -86,8 +97,20 @@ function update(){
     flappy.draw()
     drawPipes()
     bg.drawScore()
+    checkFlappyCollition()
 }
-function gameOver(){}
+function gameOver(){
+    clearInterval(interval)
+    interval = null
+    ctx.fillStyle = "red"
+    ctx.font = "bold 80px Arial"
+    ctx.fillText("GAME OVER", 50,200)
+    ctx.fillStyle = "black"
+    ctx.font = "bold 40px Arial"
+    ctx.fillText("Tu score: " + Math.floor(frames/60), 200,300)
+    ctx.font = "bold 20px Arial"
+    ctx.fillText("Presiona 'Return' para reiniciar", 50,350)
+}
 
 //aux functions
 function drawCover(){
@@ -103,7 +126,7 @@ function drawCover(){
 
 function generatePipes(){
     if(frames%150===0) {
-        var height = Math.floor(Math.random()*150)
+        var height = Math.floor(Math.random()*200 + 50)
         pipes.push(new Pipe(height,0, "top"))
         var h = canvas.height-height-100
         var y = canvas.height - h
@@ -117,6 +140,14 @@ function drawPipes(){
     pipes.forEach(function(pipe){
         pipe.draw()
     })
+}
+
+function checkFlappyCollition(){
+    for(var pipe of pipes){
+        if(flappy.isTouching(pipe)){
+            gameOver()
+        }
+    }
 }
 
 //listeners
