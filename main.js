@@ -29,7 +29,7 @@ function Board(){
     }
 
     this.drawScore = function(){
-        ctx.font = "bold 24px Avenir"
+        ctx.font = "bold 24px 'Press Start 2P'"
         ctx.fillText("Score: " + Math.floor(frames/60), 50,50)
     }
 }
@@ -103,12 +103,12 @@ function gameOver(){
     clearInterval(interval)
     interval = null
     ctx.fillStyle = "red"
-    ctx.font = "bold 80px Arial"
+    ctx.font = "bold 60px 'Press Start 2P'"
     ctx.fillText("GAME OVER", 50,200)
     ctx.fillStyle = "black"
-    ctx.font = "bold 40px Arial"
+    ctx.font = "bold 20px 'Press Start 2P'"
     ctx.fillText("Tu score: " + Math.floor(frames/60), 200,300)
-    ctx.font = "bold 20px Arial"
+    ctx.font = "bold 12px 'Press Start 2P'"
     ctx.fillText("Presiona 'Return' para reiniciar", 50,350)
 }
 
@@ -119,8 +119,8 @@ function drawCover(){
     img.onload = function(){
         bg.draw()
         ctx.drawImage(img, 50,100,300,100)
-        ctx.font = "bold 24px Avenir"
-        ctx.fillText("Presiona la tecla 'Return' para comenzar", 50,300)
+        ctx.font = "bold 13px 'Press Start 2P'"
+        ctx.fillText("Presiona la tecla 'Return' para comenzar", 20,300)
     }
 }
 
@@ -128,7 +128,8 @@ function generatePipes(){
     if(frames%150===0) {
         var height = Math.floor(Math.random()*200 + 50)
         pipes.push(new Pipe(height,0, "top"))
-        var h = canvas.height-height-100
+        var gap = Math.floor(Math.random()*100 + 50)
+        var h = canvas.height-height-gap
         var y = canvas.height - h
         pipes.push(new Pipe(h,y))
     }
